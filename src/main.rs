@@ -4,22 +4,22 @@ use std::time;
 fn main() {
     let mut start = time::Instant::now();
 
-    for i in 0..100000 {
-        format!("{}", i);
+    for i in 0..1000000 {
+        format!("123456789012345678901234567890{}", i);
     }
 
     let mut elapsed = start.elapsed();
-    println!("format only: {}.{:>09}", elapsed.as_secs(), elapsed.subsec_nanos());
+    println!("format only: {}", elapsed.as_secs() as f64 + elapsed.subsec_nanos() as f64 * 1.0e-9);
 
-    start = time::Instant::now();
     let mut out: u32 = 0;
+    start = time::Instant::now();
 
-    for i in 0..100000 {
-        out = has32_with_default_seed(&format!("{}", i));
+    for i in 0..1000000 {
+        out = has32_with_default_seed(&format!("123456789012345678901234567890{}", i));
     }
 
     elapsed = start.elapsed();
-    println!("computing hash: {}.{:>09}", elapsed.as_secs(), elapsed.subsec_nanos());
+    println!("computing hash: {}", elapsed.as_secs() as f64 + elapsed.subsec_nanos() as f64 * 1.0e-9);
     println!("final output: {}", out);
 }
 

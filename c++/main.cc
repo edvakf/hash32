@@ -83,34 +83,38 @@ uint32 Hash32WithDefaultSeed(const std::string &input) {
   return Hash32(input.data(), input.size(), 0xBEEF);
 }
 
+double duration(timeval start, timeval end) {
+  return (static_cast<double>(end.tv_sec) + static_cast<double>(end.tv_usec) * 1.0e-6) -
+    (static_cast<double>(start.tv_sec) + static_cast<double>(start.tv_usec) * 1.0e-6);
+}
+
 int main(int argc, char** argv) {
   struct timeval start, end;
   if (0 != gettimeofday(&start, 0)) { return 1; }
 
   uint32 out;
-  std::string str;
 
-  for (int i = 0; i < 100000; i++) {
+  for (int i = 0; i < 1000000; i++) {
     std::ostringstream ostr;
-    ostr << i;
-    str = ostr.str();
+    ostr << "123456789012345678901234567890" << i;
+    ostr.str();
   }
 
   if (0 != gettimeofday(&end, 0)) { return 1; }
 
-  printf("format only: %ld.%09d\n", end.tv_sec - start.tv_sec, end.tv_usec - start.tv_usec);
+  printf("format only: %f\n", duration(start, end));
 
   if (0 != gettimeofday(&start, 0)) { return 1; }
 
-  for (int i = 0; i < 100000; i++) {
+  for (int i = 0; i < 1000000; i++) {
     std::ostringstream ostr;
-    ostr << i;
+    ostr << "123456789012345678901234567890" << i;
     out = Hash32WithDefaultSeed(ostr.str());
   }
 
   if (0 != gettimeofday(&end, 0)) { return 1; }
 
-  printf("computing hash: %ld.%09d\n", end.tv_sec - start.tv_sec, end.tv_usec - start.tv_usec);
+  printf("computing hash: %f\n", duration(start, end));
   printf("final output: %u\n", out);
   return 0;
 }
